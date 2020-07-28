@@ -1,4 +1,4 @@
-<p align="center"><img width=50% src="https://github.com/hilsdsg3/Econometric_data/master/meta_data/media/logo.png"></p>
+<p align="center"><img width=50% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/logo.png"></p>
 <p align="center"><img width=40% src="https://github.com/hilsdsg3/Econ_proj1/blob/master/media/name.png"></p>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
