@@ -34,3 +34,5 @@ from fredapi import Fred
 InteractiveShell.ast_node_interactivity = "all"
 register_matplotlib_converters()
 pd.core.common.is_list_like = pd.api.types.is_list_like
+
+from pandas.testing import assert_frame_equal

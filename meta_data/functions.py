@@ -67,7 +67,6 @@ def get_prices(securities, account, FOLDER_LOCATION, data_type,
 
     t = 0
     
-    print(securities[0])
     for security in securities:
         prices_file = FOLDER_LOCATION +'prices_'+security+'.csv'
         if not(path.exists(prices_file)):
@@ -271,8 +270,8 @@ def bollinger_bands(inx_price, periods):
     df = inx_price
     df = df.rename(columns={"^GSPC":  "inx_pr"})
     per = str(periods)
-    df[per+'p MA'] = df['inx_pr'].rolling(window=periods).mean()
-    df[per+'p STD'] = df['inx_pr'].rolling(window=periods).std()
+    df[per+'p MA'] = df['spy'].rolling(window=periods).mean()
+    df[per+'p STD'] = df['spy'].rolling(window=periods).std()
     df['Upper Band'] = df[per+'p MA'] + (df[per+'p STD'] * 2)
     df['Lower Band'] = df[per+'p MA'] - (df[per+'p STD'] * 2)
     df = df.drop(['MA50_index'], axis=1)
@@ -450,27 +449,27 @@ def bollinger_bands_graph(index_price, Inx):
         index_price['30 Day MA'] + (index_price['30 Day STD'] * 2)
     index_price['Lower Band'] =\
         index_price['30 Day MA'] - (index_price['30 Day STD'] * 2)
-    boll_bands = index_price
-    boll_bands = boll_bands.loc[boll_bands.index[-400]:boll_bands.index[-1]]
-    plt.style.use('ggplot')
-    fig, ax = plt.subplots(figsize=(FIGURE_WIDTH, FIGURE_HEIGHT))
-    ax.plot(boll_bands)
-    ax = fig.add_subplot(111)
-    # Get index values for the X axis for facebook DataFrame
-    x_axis = boll_bands.index.get_level_values(0)
-    # Plot shaded 21 Day Bollinger Band
-    ax.fill_between(x_axis, boll_bands['Upper Band'],
-                    boll_bands['Lower Band'], color='grey')
-    # Plot Adjust Closing Price and Moving Averages
-    ax.plot(x_axis, boll_bands[Inx], color='blue', lw=LINE_WIDTH)
-    ax.plot(x_axis, boll_bands['30 Day MA'], color='black', lw=LINE_WIDTH)
-    # Set Title & Show the Image
-    ax.set_title('S&P Market Bollinger Bands', fontsize=GRAPH_FONT_SIZE)
-    ax.set_xlabel('Date (Year/Month)', fontsize=GRAPH_FONT_SIZE)
-    ax.set_ylabel('Price(USD)', fontsize=GRAPH_FONT_SIZE)
-    fig.tight_layout()
-    #ax.legend()
-    plt.show()
+    return(index_price)
+#     boll_bands = boll_bands.loc[boll_bands.index[-400]:boll_bands.index[-1]]
+#     plt.style.use('ggplot')
+#     fig, ax = plt.subplots(figsize=(FIGURE_WIDTH, FIGURE_HEIGHT))
+#     ax.plot(boll_bands)
+#     ax = fig.add_subplot(111)
+#     # Get index values for the X axis for facebook DataFrame
+#     x_axis = boll_bands.index.get_level_values(0)
+#     # Plot shaded 21 Day Bollinger Band
+#     ax.fill_between(x_axis, boll_bands['Upper Band'],
+#                     boll_bands['Lower Band'], color='grey')
+#     # Plot Adjust Closing Price and Moving Averages
+#     ax.plot(x_axis, boll_bands[Inx], color='blue', lw=LINE_WIDTH)
+#     ax.plot(x_axis, boll_bands['30 Day MA'], color='black', lw=LINE_WIDTH)
+#     # Set Title & Show the Image
+#     ax.set_title('S&P Market Bollinger Bands', fontsize=GRAPH_FONT_SIZE)
+#     ax.set_xlabel('Date (Year/Month)', fontsize=GRAPH_FONT_SIZE)
+#     ax.set_ylabel('Price(USD)', fontsize=GRAPH_FONT_SIZE)
+#     fig.tight_layout()
+#     #ax.legend()
+#     plt.show()
 
 
 def econometric_graph(combined_12_mo_return):
