@@ -29,7 +29,9 @@ from IPython.core.interactiveshell import InteractiveShell
 from IPython.display import display
 import fredapi
 from fredapi import Fred
-#import global_vars_and_constants
+from plotly.offline import init_notebook_mode, iplot, plot
+import chart_studio.plotly as py
+import plotly.graph_objs as go
 
 InteractiveShell.ast_node_interactivity = "all"
 register_matplotlib_converters()
