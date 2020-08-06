@@ -296,84 +296,85 @@ def simple_return_wo_value(price_data, period):
     return(Daily_R)
 
 
-def update_securities_df(temp):
+def update_securities_df(temp, update):
     '''
     This function updates the "securities research.csv" file
     for various items such as a dividend and stock summary
     '''
 
-    t = 0
-    bypass_update = False
+    if update:
+        t = 0
+        bypass_update = False
 
-    print('Downloding financial data ....')
+        print('Downloding financial data ....')
 
-    for i in temp['Ticker']:
-        print(i)
-        div_tick = pd.DataFrame(yf.Ticker(i).dividends)
-        info_tick = yf.Ticker(i).info
-        if info_tick['longBusinessSummary'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'Business Summary'] =\
-                info_tick['longBusinessSummary']
-        if info_tick['shortName'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'Name'] =\
-                info_tick['shortName']
-        if info_tick['exchange'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'exchange'] =\
-                info_tick['exchange']
-        if info_tick['fundFamily'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'fundfamily'] =\
-                info_tick['fundFamily']
-        if info_tick['quoteType'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'quoteType'] = \
-                info_tick['quoteType']
-        if info_tick['category'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'category'] = \
-                info_tick['category']
-        if info_tick['market'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'market'] = \
-                info_tick['market']
-        if info_tick['regularMarketVolume'] != np.nan:
-            temp.loc[temp['Ticker'] == i,
-                     'reg_Vol'] = \
-                info_tick['regularMarketVolume']
-        if len(div_tick) != 0:
-            div_tick.index = pd.to_datetime(div_tick.index, format='%Y-%m-%d')
-            div_tick = div_tick.sort_index(axis=0, ascending=False)
-            div_tick['Dividends'] = div_tick['Dividends'].astype(float)
-            temp.loc[temp['Ticker'] == i, 'EX_amount'] =\
-                div_tick.iloc[0]['Dividends']
-            temp.loc[temp['Ticker'] == i, 'EX_date_x'] = div_tick.index[0]
-            temp['EX_date_x'] = pd.to_datetime(temp['EX_date_x'],
-                                               format='%Y-%m-%d')
-            delta_date = dt.timedelta(days=(div_tick.index[0] -
-                                      div_tick.index[1]) /
-                                      np.timedelta64(1, 'D'))
-            temp.loc[temp['Ticker'] == i, 'Future_EX_date'] =\
-                temp.loc[temp['Ticker'] == i, 'EX_date_x'] + delta_date \
-                + dt.timedelta(days=20)
-            temp['Future_EX_date'] = pd.to_datetime(temp['Future_EX_date'],
-                                                    format='%Y-%m-%d')
-            # print(i,(tmp_date + dt.timedelta(days=7)))
-        temp.loc[temp['Ticker'] == i, 'Div yeild / yr'] =\
-            round(info_tick['yield']*100,2)  # updating the dividend yield
-        t1 = pd.to_datetime(temp.loc[temp['Ticker'] == i, 'Future_EX_date'],
-                            format='%m/%d/%Y')
-        t1 = t1-pd.Timestamp('today').normalize()
-        temp.loc[temp['Ticker'] == i, 'Days_left'] =\
-            round(t1/np.timedelta64(1, 'D'), 0)
-        temp.loc[temp['Ticker'] == i, 'Days_left'] =\
-            temp.loc[temp['Ticker'] == i, 'Days_left']
-        temp.loc[temp['Ticker'] == i, 'Div - exp'] =\
-            round(temp['Div yeild / yr']-temp['Expense ratio'],2)
-    temp.to_csv(securities_file_location, sep=';', index=False)
-    print('Downloding financial data .... Finished')
+        for i in temp['Ticker']:
+            print(i)
+            div_tick = pd.DataFrame(yf.Ticker(i).dividends)
+            info_tick = yf.Ticker(i).info
+            if info_tick['longBusinessSummary'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'Business Summary'] =\
+                    info_tick['longBusinessSummary']
+            if info_tick['shortName'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'Name'] =\
+                    info_tick['shortName']
+            if info_tick['exchange'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'exchange'] =\
+                    info_tick['exchange']
+            if info_tick['fundFamily'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'fundfamily'] =\
+                    info_tick['fundFamily']
+            if info_tick['quoteType'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'quoteType'] = \
+                    info_tick['quoteType']
+            if info_tick['category'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'category'] = \
+                    info_tick['category']
+            if info_tick['market'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'market'] = \
+                    info_tick['market']
+            if info_tick['regularMarketVolume'] != np.nan:
+                temp.loc[temp['Ticker'] == i,
+                         'reg_Vol'] = \
+                    info_tick['regularMarketVolume']
+            if len(div_tick) != 0:
+                div_tick.index = pd.to_datetime(div_tick.index, format='%Y-%m-%d')
+                div_tick = div_tick.sort_index(axis=0, ascending=False)
+                div_tick['Dividends'] = div_tick['Dividends'].astype(float)
+                temp.loc[temp['Ticker'] == i, 'EX_amount'] =\
+                    div_tick.iloc[0]['Dividends']
+                temp.loc[temp['Ticker'] == i, 'EX_date_x'] = div_tick.index[0]
+                temp['EX_date_x'] = pd.to_datetime(temp['EX_date_x'],
+                                                   format='%Y-%m-%d')
+                delta_date = dt.timedelta(days=(div_tick.index[0] -
+                                          div_tick.index[1]) /
+                                          np.timedelta64(1, 'D'))
+                temp.loc[temp['Ticker'] == i, 'Future_EX_date'] =\
+                    temp.loc[temp['Ticker'] == i, 'EX_date_x'] + delta_date \
+                    + dt.timedelta(days=20)
+                temp['Future_EX_date'] = pd.to_datetime(temp['Future_EX_date'],
+                                                        format='%Y-%m-%d')
+                # print(i,(tmp_date + dt.timedelta(days=7)))
+            temp.loc[temp['Ticker'] == i, 'Div yeild / yr'] =\
+                round(info_tick['yield']*100,2)  # updating the dividend yield
+            t1 = pd.to_datetime(temp.loc[temp['Ticker'] == i, 'Future_EX_date'],
+                                format='%m/%d/%Y')
+            t1 = t1-pd.Timestamp('today').normalize()
+            temp.loc[temp['Ticker'] == i, 'Days_left'] =\
+                round(t1/np.timedelta64(1, 'D'), 0)
+            temp.loc[temp['Ticker'] == i, 'Days_left'] =\
+                temp.loc[temp['Ticker'] == i, 'Days_left']
+            temp.loc[temp['Ticker'] == i, 'Div - exp'] =\
+                round(temp['Div yeild / yr']-temp['Expense ratio'],2)
+        temp.to_csv(securities_file_location, sep=';', index=False)
+        print('Downloding financial data .... Finished')
     return(temp)
 
 
@@ -401,6 +402,7 @@ def display_relative_strength(aver, Market_indicator_signal, mkt_ind,
     print('The ascending mean return for 1,3,6,12mo ranking for '
           '11 sectors are :')
     print(show.to_string(index=False))
+    #print(display(show))
     print("")
     print('The S&P index is at a {} condition : {}% above the 10mo SMA :'
           .format(Market_indicator_signal, round(mkt_ind, 1)))
