@@ -30,6 +30,7 @@ INX = 'spy'
 #  Global variables
 #end_date = pd.Timestamp('today')
 end_date = pd.to_datetime('today')
+#end_date = pd.to_datetime('now').tz_localize("GMT").tz_convert('America/Los_Angeles')
 end_date = end_date.replace(hour=0, minute=0, second=0, microsecond=0)
 start_date = end_date - timedelta(days=DAYS_LOOK_BACK)
 fred = Fred(FRED_API)

@@ -81,7 +81,14 @@ def get_prices(securities, account, FOLDER_LOCATION, data_type,
             download_data = download_data_fn(price_data, account, pnt_stmnt)
         else:
             download_data = True
-
+        
+        '''
+        The following if statement waits until 5:00est of a market open day AND 
+        "force update var" is false
+        '''
+        if price_data.index[-1] + timedelta(hours=41) > pd.to_datetime('now') and not(force_update):
+            download_data = False
+            
         if download_data or force_update:
             print('')
             print('Downloading price data ....')
