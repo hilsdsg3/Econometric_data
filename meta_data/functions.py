@@ -261,24 +261,24 @@ def get_mkt_indicator(inx_price):
     return(mkt_ind_signal, mkt_ind[0])
 
 
-def bollinger_bands(inx_price, periods):
-    '''
-    This function is one of the characteristics in price movement
-    '''
+# def bollinger_bands(inx_price, periods):
+# #     '''
+# #     This function is one of the characteristics in price movement
+# #     '''
 
-    # Calculate XX Day Moving Average, Std Deviation, Upper Band and Lower Band
-    df = inx_price
-    df = df.rename(columns={"^GSPC":  "inx_pr"})
-    per = str(periods)
-    df[per+'p MA'] = df['spy'].rolling(window=periods).mean()
-    df[per+'p STD'] = df['spy'].rolling(window=periods).std()
-    df['Upper Band'] = df[per+'p MA'] + (df[per+'p STD'] * 2)
-    df['Lower Band'] = df[per+'p MA'] - (df[per+'p STD'] * 2)
-    df = df.drop(['MA50_index'], axis=1)
-    df = df.drop(['MA200_index'], axis=1)
-    df = df.drop([per+'p STD'], axis=1)
-    df = df.loc[df.index[-400]: df.index[-1]]
-    return (df)
+# #     # Calculate XX Day Moving Average, Std Deviation, Upper Band and Lower Band
+# #     df = inx_price
+# #     df = df.rename(columns={"^GSPC":  "inx_pr"})
+# #     per = str(periods)
+# #     df[per+'p MA'] = df['spy'].rolling(window=periods).mean()
+# #     df[per+'p STD'] = df['spy'].rolling(window=periods).std()
+# #     df['Upper Band'] = df[per+'p MA'] + (df[per+'p STD'] * 2)
+# #     df['Lower Band'] = df[per+'p MA'] - (df[per+'p STD'] * 2)
+# #     df = df.drop(['MA50_index'], axis=1)
+# #     df = df.drop(['MA200_index'], axis=1)
+# #     df = df.drop([per+'p STD'], axis=1)
+# #     df = df.loc[df.index[-400]: df.index[-1]]
+# #     return (df)
 
 
 def simple_return_wo_value(price_data, period):
