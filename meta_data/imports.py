@@ -32,6 +32,11 @@ from fredapi import Fred
 from plotly.offline import init_notebook_mode, iplot, plot
 import chart_studio.plotly as py
 import plotly.graph_objs as go
+from sqlalchemy import create_engine
+from scipy.stats.mstats import gmean # for geometric mean of values
+from scipy.stats import norm
+import quantstats as qs # for portfolio reports
+import seaborn as sns # for graphs
 
 InteractiveShell.ast_node_interactivity = "all"
 register_matplotlib_converters()

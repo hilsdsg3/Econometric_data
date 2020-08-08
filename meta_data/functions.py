@@ -84,9 +84,12 @@ def get_prices(securities, account, FOLDER_LOCATION, data_type,
         
         '''
         The following if statement waits until 5:00est of a market open day AND 
-        "force update var" is false
+        "force update var" is false. Until 1:30pm PST/4:30 EST the next market 
+        day after download this inequality becomes True and the daily prices 
+        are not downloaded. The timedeltas in the following are converting the
+        UTC time to PST and will need to change if you are in a different time zone.
         '''
-        if price_data.index[-1] + timedelta(hours=41) > pd.to_datetime('now') and not(force_update):
+        if price_data.index[-1] + timedelta(hours=37.5) > pd.to_datetime('now') - timedelta(hours=7) and not(force_update):
             download_data = False
             
         if download_data or force_update:
