@@ -41,6 +41,6 @@ Holidays = pd.read_csv(MAIN_FOLDER + ECONO_DATA_REPO + META_FILE_FOLDER +
                        HOLIDAYS_FILE, sep=',', index_col='Date')
 Holidays.index = pd.to_datetime(Holidays.index, format='%m/%d/%Y')
 Today = pd.Timestamp('today').normalize()
-kw_save = dict(bbox_iches='tight', transparent=True)
+#kw_save = dict(bbox_iches='tight', transparent=True)
 
 print("Ready to go !")
