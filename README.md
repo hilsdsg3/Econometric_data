@@ -7,7 +7,7 @@ A current look at how the 11 different US market sectors are performing with reg
 <br>
 
 ### Sector Relative Strength
-
+The information on the following asecending chart is the mean returm for 1,3,6,12 month, dividend information, and the regular volume of the ETF. Highlighted is the Healthcare ETF XLV with a mean return of 11.5% with a dividend yeild 2.27% and a effective dividend rate (dividend minus expense) of 2.4%. Also I have the past dividend timestamp or more commonly called EX_dividend date. The future approxiamate dividend date and the days left for the dividend payout.       
 <p align="center"><img width=60% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/sector_chart.png"></p>
 
 ### S&P Market chart
