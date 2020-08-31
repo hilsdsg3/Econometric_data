@@ -419,7 +419,7 @@ def display_relative_strength(aver, Market_indicator_signal, mkt_ind,
     print('Market analysis end timestamp : {}'.format(show2.index.max()))
     print("")
     print('The ascending mean return for 1,3,6,12mo ranking for '
-          '11 sectors are :')
+          '11 sectors plus 1 index ETF :')
     print(show.to_string(index=False))
     #print(display(show))
     print("")

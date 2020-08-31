@@ -1,9 +1,14 @@
 ## Sector, Index, and Econometric Overview
-A current look at how the 11 different US market sectors are performing with regards to relative strength and dividend chart. Also a graphical look at the S&P's bollinger bands, 50 day MA , and 200 day MA. Followed by two econometric graphs displaying select FRED rates like risk-free rate, unemployment data, 30-yr mortgage rate, leading economic indicator, Core CPI, 10-2mo yield rate. These Plotly graphs show show how rich n customizable the visualization is.   
+A current look at how the 11 different US market sectors are performing with regards to relative strength and dividend chart. Also a graphical look at the S&P's bollinger bands, 50 day MA , and 200 day MA. Followed by two econometric graphs displaying select FRED rates like risk-free rate, unemployment data, 30-yr mortgage rate, leading economic indicator, Core CPI, 10-2mo yield rate. My [github.io](https://hilsdsg3.github.io/hildsg3/) site shows the graphs in interactive Plotly graphs. I like these graphs because you can zoom and narrow in on a certain timeframe.   
+
 
 <p align="center"><img width=60% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/Bull_bear.jpg"></p>
 
 <br>
+
+### Sector Relative Strength
+
+<p align="center"><img width=60% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/sector_chart.png"></p>
 
 ### S&P Market chart
 On the chart is the 200 and 50 day MA as well the bollinger bands. One could use these daily charts for a simply strategy as the Golden-Death cross.   
