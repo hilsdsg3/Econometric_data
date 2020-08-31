@@ -6,56 +6,60 @@ def download_data_fn(price_data, account, pnt_stmnt):
     '''
 
     download_data = False  # Initialize
-    if Today.dayofweek > 4:  # Is today a sat or sun
-        if Today.dayofweek == 5:  # Is today a sat
-            if Today - pd.Timedelta(days=1) == price_data.index[-1]:
+    if account > '':
+        if Today.dayofweek > 4:  # Is today a sat or sun
+            if Today.dayofweek == 5:  # Is today a sat
+                if Today - pd.Timedelta(days=1) == price_data.index[-1]:
+                    if pnt_stmnt:
+                        print("Today is a sat and the ")
+                        print(f"{account} price data is updated")
+                else:
+                    download_data = True
+            elif Today.dayofweek == 6:  # Is today a sun
+                if Today - pd.Timedelta(days=2) == price_data.index[-1]:
+                    if pnt_stmnt:
+                        print("Today is a sun is and the ")
+                        print(f"{account} price data is updated")
+                else:
+                    download_data = True
+        elif Today in Holidays.index:
+            if not(Today.dayofweek == 0):
+                if not(Today - pd.Timedelta(days=1) ==
+                        price_data.index[-1]):
+                    if pnt_stmnt:
+                        print("Today is not a mon holiday and the ")
+                        print(f"the {account} price data is NOT updated")
+                        download_data = True
+                elif pnt_stmnt:
+                    print("Today is not a mon holiday ")
+                    print(f"the {account} price data is updated")
+            elif not(Today-pd.Timedelta(days=3) == price_data.index[-1]):
                 if pnt_stmnt:
-                    print("Today is a sat and the ")
-                    print(f"{account} price data is updated")
-            else:
-                download_data = True
-        elif Today.dayofweek == 6:  # Is today a sun
-            if Today - pd.Timedelta(days=2) == price_data.index[-1]:
-                if pnt_stmnt:
-                    print("Today is a sun is and the ")
-                    print(f"{account} price data is updated")
-            else:
-                download_data = True
-    elif Today in Holidays.index:
-        if not(Today.dayofweek == 0):
-            if not(Today - pd.Timedelta(days=1) ==
-                    price_data.index[-1]):
-                if pnt_stmnt:
-                    print("Today is not a mon holiday and the ")
+                    print("Today is a mon holiday and the ")
                     print(f"the {account} price data is NOT updated")
                     download_data = True
             elif pnt_stmnt:
-                print("Today is not a mon holiday ")
-                print(f"the {account} price data is updated")
-        elif not(Today-pd.Timedelta(days=3) == price_data.index[-1]):
-            if pnt_stmnt:
                 print("Today is a mon holiday and the ")
-                print(f"the {account} price data is NOT updated")
-                download_data = True
-        elif pnt_stmnt:
-            print("Today is a mon holiday and the ")
-            print(f"{account} price data is updated")
-    elif not(Today - pd.Timedelta(days=0) == price_data.index[-1]):
-        download_data = True
-        if pnt_stmnt:
+                print(f"{account} price data is updated")
+        elif not(Today - pd.Timedelta(days=0) == price_data.index[-1]):
+            download_data = True
+            if pnt_stmnt:
+                print("Today the market was open and the ")
+                print(f"{account} price data is NOT updated")
+        if not download_data and Today.dayofweek < 5 and pnt_stmnt:
             print("Today the market was open and the ")
-            print(f"{account} price data is NOT updated")
-    if not download_data and Today.dayofweek < 5 and pnt_stmnt:
-        print("Today the market was open and the ")
-        print(f"{account} price data is updated")
-    elif not download_data and Today.dayofweek > 4 and pnt_stmnt:
-        print("Today the market is CLOSED and the ")
-        print(f"the {account} price data is updated")
+            print(f"{account} price data is updated")
+        elif not download_data and Today.dayofweek > 4 and pnt_stmnt:
+            print("Today the market is CLOSED and the ")
+            print(f"the {account} price data is updated")
+    else:
+        download_data = True
     return(download_data)
 
 
-def get_prices(securities, account, FOLDER_LOCATION, data_type,
-               start_date, force_update):
+def get_prices(securities, data_type,
+               start_date, force_update, end_date = None,
+               account = None, FOLDER_LOCATION = None):
     '''
     This function downloads the pricing data from Yahoo finance
     '''
@@ -64,24 +68,25 @@ def get_prices(securities, account, FOLDER_LOCATION, data_type,
     pnt_stmnt = True  # Tells the weekday and whether the data needs updating
     df1 = [] # Initialize the output_prices_df
     
-
     t = 0
+    price_data = ''
     
     for security in securities:
-        prices_file = FOLDER_LOCATION +'prices_'+security+'.csv'
-        if not(path.exists(prices_file)):
-            open(prices_file, "w")
-            download_data = True
-        elif path.exists(prices_file) and os.path.getsize(prices_file) > 8000:
-            price_data = pd.read_csv(prices_file, sep=';', index_col='Date')
-            price_data.index = pd.to_datetime(price_data.index, format='%Y-%m-%d')
-            price_data = price_data.rename(columns={price_data.columns[0]: security })
-            if security != securities[0]:
-                pnt_stmnt = False 
-            download_data = download_data_fn(price_data, account, pnt_stmnt)
-        else:
-            download_data = True
-        
+        if FOLDER_LOCATION:
+            prices_file = FOLDER_LOCATION +'prices_'+security+'.csv'
+            if not(path.exists(prices_file)):
+                open(prices_file, "w")
+                download_data = True
+            elif path.exists(prices_file) and os.path.getsize(prices_file) > 8000:
+                price_data = pd.read_csv(prices_file, sep=';', index_col='Date')
+                price_data.index = pd.to_datetime(price_data.index, format='%Y-%m-%d')
+                price_data = price_data.rename(columns={price_data.columns[0]: security })
+                if security != securities[0]:
+                    pnt_stmnt = False 
+                download_data = download_data_fn(price_data, account, pnt_stmnt)
+            else:
+                download_data = True
+
         '''
         The following if statement waits until 5:00est of a market open day AND 
         "force update var" is false. Until 1:30pm PST/4:30 EST the next market 
@@ -89,9 +94,12 @@ def get_prices(securities, account, FOLDER_LOCATION, data_type,
         are not downloaded. The timedeltas in the following are converting the
         UTC time to PST and will need to change if you are in a different time zone.
         '''
-        if price_data.index[-1] + timedelta(hours=37.5) > pd.to_datetime('now') - timedelta(hours=7) and not(force_update):
-            download_data = False
-            
+        temp_data = price_data 
+        if temp_data is not None:
+            if price_data.index[-1] + timedelta(hours=37.5) > pd.to_datetime('now') - \
+                timedelta(hours=7) and not(force_update):
+                download_data = False
+
         if download_data or force_update:
             print('')
             print('Downloading price data ....')
@@ -106,7 +114,8 @@ def get_prices(securities, account, FOLDER_LOCATION, data_type,
                     price_data = price_data.sort_index()
                     price_data.index = pd.to_datetime(price_data.index, format='%Y-%m-%d')
                     price_data = pd.DataFrame({'Date':price_data.index, security:price_data.values})
-                    price_data.to_csv(prices_file, sep=';', index=False)
+                    if FOLDER_LOCATION:
+                        price_data.to_csv(prices_file, sep=';', index=False)
                     price_data = price_data.set_index('Date')
                     price_data = price_data.rename(columns={price_data.columns[0]: security })
                     i += 1
@@ -484,57 +493,98 @@ def bollinger_bands_graph(index_price, Inx):
 #     plt.show()
 
 
-def econometric_graph(combined_12_mo_return):
-    '''
-    This is econometric graph with Core Consumer Price Index,
-    30-year mortgage rate, 10mo-2mo Treasury Yield, Risk-free rate
-    Unemployment Rate
-    '''
+# def econometric_graph(combined_12_mo_return):
+#     '''
+#     This is econometric graph with Core Consumer Price Index,
+#     30-year mortgage rate, 10mo-2mo Treasury Yield, Risk-free rate
+#     Unemployment Rate
+#     '''
 
-    plt.style.use('ggplot')
-    fig, ax = plt.subplots(figsize=(FIGURE_WIDTH, FIGURE_HEIGHT))
-    ax.set_title('Economic indicators', fontsize=GRAPH_FONT_SIZE)
-    ax.set_ylabel('Annualized', fontsize=GRAPH_FONT_SIZE)
-    fig.tight_layout()
-    combined_12_mo_return['USSLIND'].plot(linewidth=LINE_WIDTH, color='green')
-    combined_12_mo_return['MORTGAGE30US'].plot(linewidth=LINE_WIDTH, color='blue')
-    combined_12_mo_return['CPILFESL'].plot(linewidth=LINE_WIDTH, color='black')
-    combined_12_mo_return['T10Y2Y'].plot(linewidth=LINE_WIDTH, color='yellow')
-    combined_12_mo_return['DTB3'].plot(linewidth=LINE_WIDTH, color='red')
-    combined_12_mo_return['ICSA'].plot(linewidth=LINE_WIDTH, color='purple')
+#     plt.style.use('ggplot')
+#     fig, ax = plt.subplots(figsize=(FIGURE_WIDTH, FIGURE_HEIGHT))
+#     ax.set_title('Economic indicators', fontsize=GRAPH_FONT_SIZE)
+#     ax.set_ylabel('Annualized', fontsize=GRAPH_FONT_SIZE)
+#     fig.tight_layout()
+#     combined_12_mo_return['USSLIND'].plot(linewidth=LINE_WIDTH, color='green')
+#     combined_12_mo_return['MORTGAGE30US'].plot(linewidth=LINE_WIDTH, color='blue')
+#     combined_12_mo_return['CPILFESL'].plot(linewidth=LINE_WIDTH, color='black')
+#     combined_12_mo_return['T10Y2Y'].plot(linewidth=LINE_WIDTH, color='yellow')
+#     combined_12_mo_return['DTB3'].plot(linewidth=LINE_WIDTH, color='red')
+#     combined_12_mo_return['ICSA'].plot(linewidth=LINE_WIDTH, color='purple')
 
-    # combined_12_mo_return['ICSA'].plot(linewidth=3,color='green');
-    legend = plt.legend(('LEI (last :{})'.format(round(
-                        combined_12_mo_return.loc[combined_12_mo_return.
-                                                  index[-1], "USSLIND"], 2)),
-                                                 '30yr-Mort(last: {})\
-                                                '.format(round(
-                                                    combined_12_mo_return.
-                                                    loc[combined_12_mo_return.
-                                                        index[-1],
-                                                        "MORTGAGE30US"], 2)),
-                                                 'Core CPI inflation(last: {})\
-                                                '.format(round(
-                                                    combined_12_mo_return.
-                                                    loc[combined_12_mo_return.
-                                                        index[-1],
-                                                        "CPILFESL"], 2)),
-                                                 '10-2 Yld(last: {})\
-                                                '.format(round(
-                                                    combined_12_mo_return.
-                                                    loc[combined_12_mo_return.
-                                                        index[-1],
-                                                        "T10Y2Y"], 2)),
-                                                 'Risk-free rate(last: {})\
-                                                '.format(round(
-                                                    combined_12_mo_return.
-                                                    loc[combined_12_mo_return.
-                                                        index[-1],
-                                                        "DTB3"], 2)),
-                                                 'UnEmp(last: {})\
-                                                '.format(round(
-                                                    combined_12_mo_return.
-                                                    loc[combined_12_mo_return.
-                                                        index[-1],
-                                                        "ICSA"], 2)), ),
-                        loc='upper left', shadow=False, fontsize=GRAPH_FONT_SIZE)
+#     # combined_12_mo_return['ICSA'].plot(linewidth=3,color='green');
+#     legend = plt.legend(('LEI (last :{})'.format(round(
+#                         combined_12_mo_return.loc[combined_12_mo_return.
+#                                                   index[-1], "USSLIND"], 2)),
+#                                                  '30yr-Mort(last: {})\
+#                                                 '.format(round(
+#                                                     combined_12_mo_return.
+#                                                     loc[combined_12_mo_return.
+#                                                         index[-1],
+#                                                         "MORTGAGE30US"], 2)),
+#                                                  'Core CPI inflation(last: {})\
+#                                                 '.format(round(
+#                                                     combined_12_mo_return.
+#                                                     loc[combined_12_mo_return.
+#                                                         index[-1],
+#                                                         "CPILFESL"], 2)),
+#                                                  '10-2 Yld(last: {})\
+#                                                 '.format(round(
+#                                                     combined_12_mo_return.
+#                                                     loc[combined_12_mo_return.
+#                                                         index[-1],
+#                                                         "T10Y2Y"], 2)),
+#                                                  'Risk-free rate(last: {})\
+#                                                 '.format(round(
+#                                                     combined_12_mo_return.
+#                                                     loc[combined_12_mo_return.
+#                                                         index[-1],
+#                                                         "DTB3"], 2)),
+#                                                  'UnEmp(last: {})\
+#                                                 '.format(round(
+#                                                     combined_12_mo_return.
+#                                                     loc[combined_12_mo_return.
+#                                                         index[-1],
+#                                                         "ICSA"], 2)), ),
+#                         loc='upper left', shadow=False, fontsize=GRAPH_FONT_SIZE)
+    
+
+def plotly_time_series(df_labels,df_titles,df):
+    count = 0
+    d = {} #Empty dictionary to add values into
+    list_dict_titles = list(df_titles.keys())
+    list_dict = list(df_labels.keys())
+    print(list_dict)
+    for i in list_dict:
+        d[count] = go.Scatter(x=df['DATE'],
+                           y=df[df_labels[i]['column_name']],
+                           line=go.scatter.Line(color=df_labels[i]['color'], width = font*3),
+                               opacity=0.8,
+                               name=df_labels[i]['name'],
+                               text=df_labels[i]['text'])
+        count+=1
+    layout = go.Layout(height=800, width=1400, font=dict(size=20),
+                       title=df_titles['titles']['chart_title'],
+                        yaxis=dict(title=df_titles['titles']['y_axis_title'], showspikes=True,
+                                   fixedrange = False),
+                       xaxis=dict(title=df_titles['titles']['x_axis_title'], showspikes=True,
+                               rangeslider=dict(visible=True),
+                               rangeselector=dict(
+                               buttons=list([
+                            dict(count=1, label="1m", step="month", stepmode="backward"),
+                            dict(count=6, label="6m", step="month", stepmode="backward"),
+                            dict(count=1, label="YTD", step="year", stepmode="todate"),
+                            dict(count=1, label="1y", step="year", stepmode="backward"),
+                            dict(count=6, label="5y", step="year", stepmode="backward"),
+                            dict(step="all")
+                    ]))))
+    tot_temp = ''
+    for i in range(len(d)):
+        temp = 'd[' + str(i) + ']'
+        comma = ','
+        if i < len(d):
+            tot_temp = tot_temp + temp + comma
+        else:
+            tot_temp = tot_temp + temp
+    fig = go.Figure(data=eval(tot_temp), layout=layout)
+    iplot(fig)
