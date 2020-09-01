@@ -8,13 +8,12 @@ A current look at how the 11 different US market sectors are performing with reg
 
 ### Sector Relative Strength
 The information on the following asecending chart is the mean returm for 1,3,6,12 month, dividend information, and the regular volume of the ETF. Highlighted is the Healthcare ETF XLV with a mean return of 11.5% with a dividend yeild 2.27% and a effective dividend rate (dividend minus expense) of 2.4%. Also I have the past dividend timestamp or more commonly called EX_dividend date. The future approxiamate dividend date and the days left for the dividend payout.       
-<p align="center"><img width=60% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/sector_chart.png"></p>
+<p align="center"><img width=80% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/sector_chart.png"></p>
 
 ### S&P Market chart
-On the chart is the 200 and 50 day MA as well the bollinger bands. One could use these daily charts for a simply strategy as the Golden-Death cross.   
-A bullish sign for the S&P occurs when the 50-day moving average (MA 50 - blue line) rises above the 200-day (MA 200 - purple line). This event is called the Golden Cross.
+On the chart is the 200 and 50 day MA as well the bollinger bands. One could use these daily charts for a simply strategy as the Golden-Death cross. A bullish sign for the S&P occurs when the 50-day moving average (MA 50 - blue line) rises above the 200-day (MA 200 - purple line). This event is called the Golden Cross.
 Conversely, the Death cross event occurs when the 50-day MA decreases below the 200-day MA and would be considered bearish. Genrally, a bullish sign are prices that rise and bearish sign would be a decrease in prices.    
-<p align="center"><img width=70% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/Golden_Death_cross.jpg"></p>
+<p align="center"><img width=80% src="https://github.com/hilsdsg3/Econometric_data/blob/master/meta_data/media/Golden_Death_cross.jpg"></p>
 
 <br>
 
